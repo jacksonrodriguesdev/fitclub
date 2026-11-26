@@ -101,7 +101,8 @@ function produtos(): Produto[] {
     const ler = (a: string, padrao: unknown) => (fs.existsSync(a) ? JSON.parse(fs.readFileSync(a, "utf8")) : padrao);
     const pink = new Set<number>(ler(arqMarcas, { pinkCheeks: [] }).pinkCheeks);
     const kits: Produto[] = ler(arqKits, []);
-    const live: Produto[] = [...kits, ...JSON.parse(fs.readFileSync(arqLive, "utf8"))].map((p: Produto) => ({
+    // sin catálogo (p. ej. servidor recién publicado, antes de subir los zips) la tienda abre vacía en vez de caer
+    const live: Produto[] = [...kits, ...ler(arqLive, [])].map((p: Produto) => ({
       ...p,
       linha: "live" as const,
       categorias: pink.has(p.id) ? [...p.categorias, "pink-cheeks"] : p.categorias,
