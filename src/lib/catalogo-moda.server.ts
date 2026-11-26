@@ -108,6 +108,11 @@ function produtos(): Produto[] {
       categorias: pink.has(p.id) ? [...p.categorias, "pink-cheeks"] : p.categorias,
     }));
     const lupo: Produto[] = temLupo ? JSON.parse(fs.readFileSync(arqLupo, "utf8")).map(deLupo) : [];
+    // Solo las fotos que existen en disco: en el servidor van hasta 6 por color, y las originales
+    // de la marca bloquean el uso externo (403). Un color sin fotos queda fuera de la tienda.
+    const existe = (rel: string) =>
+      rel.startsWith(PREFIXO_LUPO) ? fs.existsSync(path.join(DIR_LUPO, rel.slice(PREFIXO_LUPO.length))) : fs.existsSync(path.join(DIR, rel));
+    for (const p of [...live, ...lupo]) for (const c of p.cores) c.fotos = c.fotos.filter(existe);
     // intercaladas (2 de LIVE!, 1 de LUPO) para que las vitrinas muestren las dos líneas
     const todos: Produto[] = [];
     for (let i = 0, j = 0; i < live.length || j < lupo.length; ) {
