@@ -16,9 +16,9 @@ export function Logo({ className = "h-8" }: { className?: string }) {
 
 export function BarraAviso() {
   return (
-    <div className="text-black text-center text-xs font-semibold tracking-wide py-2 px-4" style={{ background: VERDE }}>
-      Envíos a todo Uruguay · Pagá con tarjeta o transferencia · Cambios fáciles
-    </div>
+    <a href="/c/outlet?orden=descuento" className="block text-black text-center text-xs font-semibold tracking-wide py-2 px-4 hover:underline" style={{ background: VERDE }}>
+      <b>FITCLUB FRIDAY: 20% OFF</b> en artículos seleccionados<span className="hidden sm:inline"> · Envíos a todo Uruguay · Cambios fáciles</span>
+    </a>
   );
 }
 

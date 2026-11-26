@@ -4,6 +4,7 @@ import { produtoFn } from "@/lib/catalogo-moda";
 import { LOJA, uyu, linkWhatsapp } from "@/lib/loja";
 import { LojaHeader, Vitrine, VERDE } from "@/components/moda/Loja";
 import { useCarrito, mensajePedido, cuponGuardado } from "@/components/moda/Carrito";
+import { FaixaPromo } from "@/components/moda/Banners";
 
 // Producto: /p/calza-active-1260 (el número final es el id)
 export const Route = createFileRoute("/p/$slug")({
@@ -62,6 +63,7 @@ function Produto() {
   return (
     <div className="bg-white text-neutral-900 min-h-screen">
       <LojaHeader />
+      <FaixaPromo />
       <div className="mx-auto max-w-7xl px-4 pt-6 grid gap-8 lg:grid-cols-[1fr_420px]">
         {/* Galería */}
         <div className="grid gap-3 sm:grid-cols-[80px_1fr]">

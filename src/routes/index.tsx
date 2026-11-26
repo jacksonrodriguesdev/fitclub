@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, Truck, MessageCircle, CreditCard, RefreshCw } from "lucide-react";
+import { useState } from "react";
+import { Truck, MessageCircle, CreditCard, RefreshCw } from "lucide-react";
 import { homeModaFn } from "@/lib/catalogo-moda";
 import { LOJA, linkWhatsapp } from "@/lib/loja";
 import { LojaHeader, Vitrine, VERDE } from "@/components/moda/Loja";
 import { seoInicio } from "@/lib/seo-uy";
+import { BANNERS, CarruselBanners, BannerFaixa, Modalidades } from "@/components/moda/Banners";
 
 // Inicio de FITCLUBUY: misma estructura de una tienda deportiva grande
 // (carrusel, pilares por deporte, vitrina con pestañas, editorial, cajas y vitrinas)
@@ -15,43 +16,6 @@ export const Route = createFileRoute("/")({
 });
 
 type Datos = Awaited<ReturnType<typeof homeModaFn>>;
-
-function Hero({ slides }: { slides: Datos["hero"] }) {
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    const t = setInterval(() => setI((v) => (v + 1) % slides.length), 6000);
-    return () => clearInterval(t);
-  }, [slides.length, i]);
-  const s = slides[i];
-  return (
-    <section className="relative bg-neutral-900 text-white overflow-hidden">
-      <div className="grid grid-cols-3 h-[460px] sm:h-[560px] lg:h-[640px]">
-        {s.fotos.map((f, k) => (
-          <img key={f + k} src={f} alt="" className={`size-full object-cover object-top ${k > 0 ? "hidden sm:block" : "col-span-3 sm:col-span-1"}`} />
-        ))}
-      </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-4 pb-16">
-        <div className="text-xs tracking-[0.35em] font-bold" style={{ color: VERDE }}>FIT CLUB</div>
-        <h1 className="mt-2 text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-[0.95] max-w-3xl">{s.titulo}</h1>
-        <p className="mt-3 text-white/85 max-w-xl">{s.sub}</p>
-        <div className="mt-6 flex gap-3">
-          <a href={s.mujer} className="bg-white text-black font-bold px-7 py-3 text-sm tracking-wide hover:bg-neutral-200">MUJER</a>
-          <a href={s.hombre} className="border border-white font-bold px-7 py-3 text-sm tracking-wide hover:bg-white hover:text-black">HOMBRE</a>
-        </div>
-      </div>
-      <div className="absolute bottom-4 right-4 sm:right-8 flex items-center gap-3">
-        <button onClick={() => setI((i - 1 + slides.length) % slides.length)} className="size-9 grid place-items-center rounded-full border border-white/50 hover:bg-white/10" aria-label="Anterior"><ChevronLeft className="size-4" /></button>
-        <div className="flex gap-1.5">
-          {slides.map((_, k) => (
-            <button key={k} onClick={() => setI(k)} aria-label={`Banner ${k + 1}`} className="h-1 rounded-full transition-all" style={{ width: k === i ? 28 : 12, background: k === i ? VERDE : "rgba(255,255,255,.5)" }} />
-          ))}
-        </div>
-        <button onClick={() => setI((i + 1) % slides.length)} className="size-9 grid place-items-center rounded-full border border-white/50 hover:bg-white/10" aria-label="Siguiente"><ChevronRight className="size-4" /></button>
-      </div>
-    </section>
-  );
-}
 
 function Pestanas({ pestanas }: { pestanas: Datos["pestanas"] }) {
   const [a, setA] = useState(0);
@@ -125,7 +89,7 @@ function Home() {
   return (
     <div className="bg-white text-neutral-900 overflow-x-clip">
       <LojaHeader />
-      <Hero slides={d.hero} />
+      <CarruselBanners banners={[BANNERS.friday, BANNERS.fridayFotos, BANNERS.pinkCheeks]} />
       <Confianza />
       <Categorias cats={d.categorias} />
 
@@ -160,26 +124,12 @@ function Home() {
         </div>
       </section>
 
-      {/* Pilares por deporte */}
-      <section className="mx-auto max-w-7xl px-4 mt-12">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {d.pilares.map((p) => (
-            <div key={p.slug} className="relative aspect-[3/4] overflow-hidden bg-neutral-100 group">
-              {p.foto && <img src={p.foto} alt={p.titulo} loading="lazy" className="absolute inset-0 size-full object-cover object-top transition-transform duration-500 group-hover:scale-105" />}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-4 text-white">
-                <div className="text-xl sm:text-2xl font-extrabold">{p.titulo}</div>
-                <div className="mt-3 flex gap-2">
-                  <a href={`/c/${p.slug}?genero=mujer`} className="bg-white text-black text-xs font-bold px-3 py-2 hover:bg-neutral-200">MUJER</a>
-                  <a href={`/c/${p.slug}?genero=hombre`} className="border border-white text-xs font-bold px-3 py-2 hover:bg-white hover:text-black">HOMBRE</a>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* Modalidades con 20% OFF */}
+      <Modalidades />
 
       <Pestanas pestanas={d.pestanas} />
+
+      <BannerFaixa b={BANNERS.fridayFotos} />
 
       {/* Ofertas: mayores descuentos */}
       {d.ofertas.length > 0 && (
@@ -235,6 +185,8 @@ function Home() {
           </a>
         ))}
       </section>
+
+      <BannerFaixa b={BANNERS.pinkCheeks} />
 
       {/* Pink Cheeks y kits */}
       {d.kits.length > 0 && (

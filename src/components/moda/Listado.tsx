@@ -1,6 +1,7 @@
 // Página de listado (categoría o búsqueda): filtro de talle, orden y "ver más".
 import { LojaHeader, CardModa } from "./Loja";
 import type { CardProduto } from "@/lib/catalogo-moda";
+import { FaixaPromo } from "@/components/moda/Banners";
 
 type Subcat = { slug: string; titulo: string; total: number };
 type Dados = {
@@ -72,6 +73,7 @@ export function Listado({ d, busca, base }: { d: Dados; busca: Busca; base: stri
   return (
     <div className="bg-white text-neutral-900 min-h-screen">
       <LojaHeader />
+      <FaixaPromo />
       <div className="mx-auto max-w-7xl px-4 pt-8">
         <nav className="text-xs text-neutral-500 mb-2"><a href="/" className="hover:underline">Inicio</a> / {d.titulo}</nav>
         <h1 className="text-3xl font-extrabold tracking-tight">{d.titulo}</h1>
